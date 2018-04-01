@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+	<meta charset="UTF-8">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0 minimum-scale=0.5, user-scalable=no" />
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<title>我的目标</title>
+	<link rel="stylesheet" href="/static/css/weui.min.css" />
+	<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/static/css/jquery-weui.min.css" />
+	<link rel="stylesheet" href="/static/css/goal.css" />
+	<link rel="stylesheet" href="/static/css/target.css" />
+	<link rel="stylesheet" href="/static/css/share.css"/>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_591099_obuxdf4g71d1jor.css"/>
+    <link rel="stylesheet" href="/static/css/public.css">
+
+{#    <link rel="stylesheet" href="/static/css/weui.min.css" />#}
+{#	<link rel="stylesheet" href="/static/css/bootstrap.min.css"/>#}
+{#	<link rel="stylesheet" href="/static/css/share.css"/>#}
+	<link rel="stylesheet" href="/static/css/person.css" />
+{#    <link rel="stylesheet" href="/static/css/jquery-weui.min.css"/>#}
+{#    <link rel="stylesheet" href="//at.alicdn.com/t/font_591099_obuxdf4g71d1jor.css"/>#}
+{#    <link rel="stylesheet" href="/static/css/public.css">#}
+    <style>
+        .icon-user,.icon-mubiao,.icon-huodongzhongxin{
+            font-weight: 500;
+        }
+        .iconfont_on{
+            color:rgba(31,162,255,1) !important;
+        }
+        .no_data{
+            width: 100%;
+            position: relative;
+        }
+        .no_data img{
+            width: 60%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            position: absolute;
+            margin: auto;
+        }
+        .target-list{
+            border: none;
+        }
+        .weui-tabbar__item.weui-bar__item_on .weui-tabbar__icon, .weui-tabbar__item.weui-bar__item_on .weui-tabbar__icon > i, .weui-tabbar__item.weui-bar__item_on .weui-tabbar__label{
+            color: inherit;
+        }
+        .weui-tabbar__label{
+            color: #999999;
+        }
+        .weui-tabbar a:visited {
+            color: #999;
+        }
+        .weui-tabbar__label{
+            line-height: 25px;
+        }
+        .target-list{
+            width: 96%;
+            display: block;
+            margin: 0 auto;
+        }
+        .target-list li{
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .header-mask{
+            background-color: rgba(0,0,0,0.1);
+            background:linear-gradient(to left,rgba(0,0,0,0),rgba(0,0,0,0.6));
+        }
+
+    </style>
+</head>
+
+<body ontouchstart>
+	<!--整个页面-->
+	<div class="top-pannel">
+		<!--轮播图-->
+		<div class="swiper-container">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide" data-link="#">
+					<img src="/static/images/swiper/swiper-1@2x.png" alt="https://mp.weixin.qq.com/cgi-bin/appmsg?begin=0&count=10&type=10&action=list_card&token=1726753336&lang=zh_CN">
+				</div>
+				<div class="swiper-slide" data-link="https://mp.weixin.qq.com/s?__biz=MzI2Mjc4OTU4Ng==&mid=2247483817&idx=1&sn=6855ad2314c6775f1d93aeed0814b9a7&chksm=ea448114dd33080228d4fd03d2d6756c708402146c09ed4be2b45d242d99cc53d87a3287f811#rd">
+					<img src="/static/images/swiper/lei@2x_1.jpg" alt="">
+				</div>
+				<div class="swiper-slide" data-link="https://mp.weixin.qq.com/s?__biz=MzI2Mjc4OTU4Ng==&mid=2247483823&idx=1&sn=8c1bd6a19c8b7d52af2c6028f662ca5a&chksm=ea448112dd330804f1edc6876ca60b5fa93ed247805e398598d086efb19365e8eff3e15eff43#rd">
+					<img src="/static/images/swiper/InvitingFriends@2x.png" alt="">
+				</div>
+			</div>
+			<div class="swiper-pagination swiper-pagination-bullets">
+				<span class="swiper-pagination-bullet"></span>
+				<span class="swiper-pagination-bullet"></span>
+				<span class="swiper-pagination-bullet"></span>
+			</div>
+		</div>
+        <!--我的目标列表-->
+        {% if status %}
+            <ul class="target-list">
+                <li class="target-list-item" id="aprilFool_1" data-link="" style="background-image: url(/static/images/index/aprilFool4@2x.png);display: none;">
+                        <div class="header-mask"></div>
+                        <div class="row-center between" style="box-sizing:border-box;width: 100%;margin-top: 5px;padding-right: 10px;">
+                            <div class="item-text">愚人节</div>
+                            <div class="item-status">
+                                <div class="status-text icon-active">进行中</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-left: 10px;z-index: 10;">
+
+                        </div>
+                        <div style="margin-left: 10px;z-index: 10;">
+                            <span style="font-size: 14px;color: #B6C1C8;">参与人数：</span>
+                            <span style="font-size: 18px;font-weight:600;color: #ff931f;">{{ join_num }}</span>
+                            <span style="font-size: 14px;color: #B6C1C8;">人</span>
+                        </div>
+                    </li>
+
+
+                {% for goal in goals %}
+                    <li class="target-list-item" data-link="{{ goal.goal_id}}?activity_type={{ goal.activity_type }}" {% if goal.activity_type == "0" %}style="background-image: url(/static/images/sleep_goal_bar.jpg);"{% elif goal.activity_type == "1" %}style="background-image: url(/static/images/run_goal_tubar.jpg);"{% else %}style="background-image: url(/static/images/read_goal_bar.jpeg);"{% endif %}>
+                        <div class="header-mask"></div>
+                        <div class="row-center between" style="box-sizing:border-box;width: 100%;margin-top: 5px;padding-right: 10px;">
+                            <div class="item-text">{{ goal.activity_dis }}</div>
+                            <div class="item-status">
+                                {% if goal.detail_status == "NOSTART" %}
+                                <div class="status-text icon-start">尚未开始</div>
+                                {% elif goal.detail_status == "ACTIVE" %}
+                                <div class="status-text icon-active">进行中</div>
+                                {% elif goal.detail_status == "FAILED" %}
+                                <div class="status-text icon-fail">失败</div>
+                                {% else %}
+                                <div class="status-text icon-success">目标完成</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div style="margin-left: 10px;z-index: 10;">
+                            <span style="font-size: 14px;color: #B6C1C8;">第</span>
+{#                            <span style="font-size: 16px;font-weight:600;color: white;">{% if first_day_record == 1 %}{{ goal.past_day }}{% else %}{{ goal.past_day|add:-1 }}{% endif %}/{{ goal.goal_day }}</span>#}
+                            <span style="font-size: 16px;font-weight:600;color: white;">{{ goal.past_day }}/{{ goal.goal_day }}</span>
+                            <span style="font-size: 14px;color: white;">天</span>
+                        </div>
+                        <div style="margin-left: 10px;z-index: 10;">
+                            <span style="font-size: 14px;color: #B6C1C8;">奖金池：</span>
+                            <span style="font-size: 18px;font-weight:600;color: #ff931f;">{{ goal.money|floatformat:"0" }}</span>
+                            <span style="font-size: 14px;color: #B6C1C8;">元</span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <ul class="target-list">
+                <li class="target-list-item" id="aprilFool_1" data-link="/foolsday/rank" style="background-image: url(/static/images/index/aprilFool4@2x.png);display: none;">
+                        <div class="header-mask"></div>
+                        <div class="row-center between" style="box-sizing:border-box;width: 100%;margin-top: 5px;padding-right: 10px;">
+                            <div class="item-text">愚人节</div>
+                            <div class="item-status">
+                                <div class="status-text icon-active">进行中</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-left: 10px;z-index: 10;">
+
+                        </div>
+
+                        <div style="margin-left: 10px;z-index: 10;">
+                            <span style="font-size: 14px;color: #B6C1C8;">参与人数：</span>
+                            <span style="font-size: 18px;font-weight:600;color: #ff931f;">{{ join_num }}</span>
+                            <span style="font-size: 14px;color: #B6C1C8;">人</span>
+                        </div>
+                    </li>
+                </ul>
+            <div class="no_data">
+                <img src="/static/images/index/no_data_icon@3x.png">
+            </div>
+        {% endif %}
+    </div>
+
+    <!--导航栏, 使用微信风格-->
+    <div class="weui-tabbar">
+        <a href="/activity/index" class="weui-tabbar__item">
+            <div class="weui-tabbar__icon">
+                <i class="iconfont icon-huodongzhongxin"></i>
+            </div>
+            <p class="weui-tabbar__label">微众活动</p>
+        </a>
+        <a href="/goal/index" class="weui-tabbar__item weui-bar__item--on">
+            <div class="weui-tabbar__icon">
+                <i class="iconfont icon-mubiao iconfont_on"></i>
+            </div>
+            <p class="weui-tabbar__label">我的目标</p>
+        </a>
+        <a href="/user/index" class="weui-tabbar__item">
+            <div class="weui-tabbar__icon">
+                <i class="iconfont icon-user"></i>
+            </div>
+            <p class="weui-tabbar__label">个人中心</p>
+        </a>
+    </div>
+
+        <!--
+			<li class="target-list-item">
+				<div class="item-text">线上阅读</div>
+				<div class="item-status">
+					<div class="status-text">未打卡</div>
+					<div class="status-icon weui-icon-info weui-icon_msg"></div>
+				</div>
+			</li>
+			<li class="target-list-item">
+				<div class="item-text">购书阅读</div>
+				<div class="item-status">
+					<div class="status-text">完成</div>
+					<div class="status-icon weui-icon-success weui-icon_msg"></div>
+				</div>
+			</li>
+			<li class="target-list-item">
+				<div class="item-text">跑步 自由模式</div>
+				<div class="item-status">
+					<div class="status-text">快截止了</div>
+					<div class="status-icon weui-icon-warn weui-icon_msg"></div>
+				</div>
+			</li>
+			<li class="target-list-item">
+				<div class="item-text">跑步 自律模式</div>
+				<div class="item-status">
+					<div class="status-text">进行中</div>
+					<div class="status-icon weui-icon-waiting weui-icon_msg"></div>
+				</div>
+			</li>
+			-->
+
+        <script type="text/javascript" src="/static/js/jquery-2.1.4.js"></script>
+        <script type="text/javascript" src="/static/js/jquery-weui-2.1.4.js"></script>
+        <script type="text/javascript" src="/static/js/public.js"></script>
+        <script type="text/javascript" src="/static/js/fastclick.js"></script>
+		<script>
+			// fast click binding
+			$(function () {
+				FastClick.attach(document.body);
+			});
+			$("iframe").detach();
+		</script>
+{#		<script type="text/javascript" src="/static/js/jquery-weui.min.js"></script>#}
+{#		<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>#}
+		<script type="text/javascript" src="/static/js/target.js"></script>
+		<script type='text/javascript' src='/static/js/swiper.min.js' charset='utf-8'></script>
+		<script>
+			var swiper = new Swiper('.swiper-container', {
+				pagination: '.swiper-pagination',
+				paginationClickable: true,
+				loop: true,
+				autoplay: 3000,
+				teredSlides: true,
+				nextButton: '.swiper-button-next',
+				prevButton: '.swiper-button-prev',
+				autoplayDisableOnInteraction: false
+			});
+		</script>
+		<script>
+			$(document).ready(function () {
+				$(".target-list-item").click(function () {
+					window.location.href = $(this).data('link');
+				});
+				var colHeight=window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+                var colWidth=window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+                console.log(colHeight);
+                console.log(colWidth);
+                var h_1=$(".swiper-container").height();
+                var h_2=$(".weui-tabbar").height();
+                var H_3=colHeight-h_1-h_2-10;
+                $(".no_data").height(H_3);
+
+
+
+			});
+            $(".swiper-slide").click(function () {
+                   window.location.href = $(this).data('link');
+            });
+		</script>
+
+        <script>
+
+            console.log("---------------参与人数 {{ join_num }}-------------------");
+            console.log("---------------激活-- {{ fools }}------------------");
+            console.log("---------------参加-- {{ join }}------------------");
+
+
+                {% if join == 1 %}
+                    $("#aprilFool_1").attr("data-link","/foolsday/rank");
+                    //获取日期
+                    var date_=getNowFormatDate();
+                    function getNowFormatDate() {
+                        var date = new Date();
+                        var month = String(date.getMonth() + 1);
+                        var strDate = String(date.getDate());
+                        var currentdate = month+"-"+strDate;
+                        if(currentdate=="4-1" || currentdate=="4-2" || currentdate=="4-3"){
+                            return true
+                        }else{
+                            return false
+                        }
+                    }
+                    console.log(date_);
+                    if(date_){
+                        console.log("是4月1号");
+                        $("#aprilFool_1").show();
+                        $(".no_data").hide()
+                    }else{
+                        console.log("不是4月1号");
+                        $("#aprilFool_2").hide();
+                    }
+                {% else %}
+                    $("#aprilFool_1").attr("data-link","/foolsday/go");
+                {% endif %}
+
+        </script>
+
+</body>
+
+</html>
