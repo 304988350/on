@@ -89,20 +89,20 @@ inform_articles = [{
 }]
 
 article_leizhu = [
-    {
-        # On!说明
-        'title': '擂主模式开始啦！打卡最高瓜分10万',
-        'description': '1元瓜分10万，夭寿啦！！！',
-        'image': 'http://mmbiz.qpic.cn/mmbiz_jpg/GsETib8eibZY1yOTgf5hPjnxQqETtI7Ziawn9bx7wJOl05MWrZduCic0kS0O0vebpDVFzdeEhMJCeADFurYNCpm5FQ/0',
-        'url': 'https://mp.weixin.qq.com/s?__biz=MzI2Mjc4OTU4Ng==&mid=2247483817&idx=1&sn=6855ad2314c6775f1d93aeed0814b9a7&chksm=ea448114dd33080228d4fd03d2d6756c708402146c09ed4be2b45d242d99cc53d87a3287f811#rd'
-    },
     # {
     #     # On!说明
     #     'title': '擂主模式开始啦！打卡最高瓜分10万',
     #     'description': '1元瓜分10万，夭寿啦！！！',
-    #     'image': 'http://mmbiz.qpic.cn/mmbiz_jpg/GsETib8eibZY3cPu5XAXukpkgHw23PmO0ankTc10Sibsu6O20vGYNCxMjRA7fFeSA7PBeAiagtmXxKFJSfuqf7lQ4g/0',
+    #     'image': 'http://mmbiz.qpic.cn/mmbiz_jpg/GsETib8eibZY1yOTgf5hPjnxQqETtI7Ziawn9bx7wJOl05MWrZduCic0kS0O0vebpDVFzdeEhMJCeADFurYNCpm5FQ/0',
     #     'url': 'https://mp.weixin.qq.com/s?__biz=MzI2Mjc4OTU4Ng==&mid=2247483817&idx=1&sn=6855ad2314c6775f1d93aeed0814b9a7&chksm=ea448114dd33080228d4fd03d2d6756c708402146c09ed4be2b45d242d99cc53d87a3287f811#rd'
-    # }
+    # },
+    {
+        # On!说明
+        'title': '什么?今日提现,一秒成土豪',
+        'description': '你还在等什么?现在提现即可获取233,333,333',
+        'image': 'http://mmbiz.qpic.cn/mmbiz_jpg/GsETib8eibZY3cPu5XAXukpkgHw23PmO0agVtXkHWa9VDrYZ3C8BtYBahFsawnMZiaBDoib4V9Dl9N5Pa4ZX7dx9Tg/0',
+        'url': 'http://mp.weixin.qq.com/s/31sf5K_WZNP2Ulnw81R0cA'
+    }
 ]
 # from on.temp.template_map import template
 from on.temp.push_template import do_push
@@ -182,6 +182,7 @@ welcome_str = '欢迎来到On蜕变！\n为了明天的自己Let\'s On![Yeah!]'
 app_information = 'App将在4月份上线，敬请期待！'
 # 固定回复模板
 inform_str = '请稍等，On!君还在路上！'
+withdraw = "我的房间->个人中心->我的钱包->提现"
 
 scan = "欢迎关注On！"
 introduce_informmation = ""
@@ -258,6 +259,8 @@ def wechat_check(request):
                         reply = ImageReply(message=msg, media_id='nvnR6egwWE1WzzIcMXo403dxqfcx5fV_GRhQnRH8Wsw')
                     elif "2018" in content:
                         reply = create_reply(article_2018, message=msg)
+                    elif "提现" in content:
+                        reply = create_reply(withdraw, message=msg)
                     else:
                         reply = create_reply('', message=msg)
                 else:
