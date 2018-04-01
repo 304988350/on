@@ -197,7 +197,7 @@ class RunningGoal(Goal):
 # TODO
 class RunningPunchRecordManager(models.Manager):
     # 创建一个新的record
-    def create_record(self, goal, filecontent, filename, distance, document):
+    def create_record(self, goal, filecontent, filename, distance,punch_time, document):
         # 文件存储的实际路径
         filePath = os.path.join(settings.MEDIA_DIR, filename)
         # 引用所使用的路径
@@ -208,7 +208,7 @@ class RunningPunchRecordManager(models.Manager):
         # 如果是日常模式打卡，则规定distance必须为日常距离
         if goal.goal_type:
             distance = goal.kilos_day
-        record = self.create(goal=goal, voucher_ref=refPath, voucher_store=filePath, distance=distance,
+        record = self.create(goal=goal, voucher_ref=refPath, voucher_store=filePath, distance=distance,record_time = punch_time,
                              document=document)
         # 如果是自由模式, 则计算剩余距离
         if not goal.goal_type:
@@ -285,7 +285,7 @@ class RunningPunchRecord(models.Model):
     # 外键ID,标识对应目标
     goal = models.ForeignKey(RunningGoal, related_name="punch", on_delete=models.PROTECT)
     # Time when user creates the record
-    record_time = models.DateTimeField(null=False, default=timezone.now())
+    record_time = models.DateTimeField(null=False)
     # 截图的引用地址
     # voucher_ref = models.CharField(max_length=256, null=False)
     voucher_ref = models.TextField(null=False)

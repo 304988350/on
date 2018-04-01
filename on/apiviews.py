@@ -90,6 +90,8 @@ def running_sign_in_api(request):
     distance = float(request.GET.get('distance', 0))
     goal = RunningGoal.objects.get(goal_id=goal_id)
 
+    """获取当前的时间"""
+    punch_time= timezone.now()
     """存储一段话"""
     document = request.GET.get("document", " ")
     # """获取User的WechatID"""
@@ -102,7 +104,7 @@ def running_sign_in_api(request):
     fileName = user_wechat_id + "_" + "{}".format(user.user_id)+ "_" + random_string(16) + ".jpg"
     # 文件的实际存储路径
     """将打卡记录存储到数据库中,增加一段话"""
-    punch = RunningPunchRecord.objects.create_record(goal, response.content, filename=fileName, distance=distance,
+    punch = RunningPunchRecord.objects.create_record(goal, response.content, filename=fileName, distance=distance,punch_time = punch_time,
                                                      document=document)
     goal.add_distance += distance
     goal.save()
