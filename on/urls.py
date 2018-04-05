@@ -29,7 +29,6 @@ urlpatterns = [
 
     url(r'^foolsday/rank', allview.foolsday_rank),
     url(r'^api/foolsday/create_active', allview.create_active),
-    #join_fools
     url(r'^api/join_fools', allview.join_fools),
 
     url(r'^foolsday/go', allview.fools_day),

@@ -218,17 +218,18 @@ def delete_goal(request):
                     add_up = num * 0.5 + 1
                     if add_up >= 10:
                         add_up = 10
-                    #查询用户的额外收益
+                    # 查询用户的额外收益
                     extra = UserInfo.objects.get(user_id=user.user_id)
 
                     # 查询用户当前的额外收益
                     Run = RunningGoal.objects.get(user_id=user.user_id)
                     extra_earn = Run.extra_earn
                     print(extra_earn)
-                    price = decimal.Decimal(Run.guaranty) + decimal.Decimal(Run.down_payment) + decimal.Decimal(Run.bonus * decimal.Decimal(add_up)) + decimal.Decimal(extra.extra_money)
+                    price = decimal.Decimal(Run.guaranty) + decimal.Decimal(Run.down_payment) + decimal.Decimal(
+                        Run.bonus * decimal.Decimal(add_up)) + decimal.Decimal(extra.extra_money)
                     # 将用户获取的收益存入余额
-                    #查询现在用户的保证金跟底金
-                    UserInfo.objects.save_balance(user_id=user.user_id,price=price)
+                    # 查询现在用户的保证金跟底金
+                    UserInfo.objects.save_balance(user_id=user.user_id, price=price)
                     # openid = str(UserInfo.objects.get(user_id=user.user_id).wechat_id)
                     # 删除用户的目标
                     goal_class.objects.delete_goal(goal_id)

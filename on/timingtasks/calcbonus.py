@@ -38,8 +38,8 @@ def init_jobs():
         #               timezone=pytz.timezone('Asia/Shanghai'),
         #               args=[goal_class])
         sched.add_job(calc_bonus_job, 'cron', day_of_week='0-6',
-                      hour=23,
-                      minute=50,
+                      hour=17,
+                      minute=34,
                       timezone=pytz.timezone('Asia/Shanghai'),
                       args=[goal_class])
 

@@ -14,7 +14,6 @@ import os
 from on.settings.base import *
 import django.utils.timezone as timezone
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -85,7 +84,7 @@ WSGI_APPLICATION = 'on.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'emojitest',
+        'NAME': 'newdeploy',
         # 'NAME': 'deploy',
         'USER': 'root',
         'PASSWORD': 'wang',
@@ -93,16 +92,6 @@ DATABASES = {
         'PORT': '3306',
     }
 }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'deploy',
-#         'USER': 'root',
-#         'PASSWORD': 'wang',
-#         'HOST': '119.29.191.32',
-#         'PORT': '3306',
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -139,8 +128,6 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-
-
 
 MEDIA_ROOT = '/static/media/'
 

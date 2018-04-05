@@ -272,7 +272,6 @@ class Goal(models.Model):
                     else:
                         self.status = "SUCCESS"
                         print("押金保证金都大于0，表示成功")
-
                 # 如果今天已经是最后一天，则将目标的状态设置为完成或失败
                 else:
                     print("进入自由模式，开始扣除金额，当前的活动类型是{}".format(self.goal_type))
