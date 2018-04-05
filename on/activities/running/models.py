@@ -94,7 +94,7 @@ class RunningGoal(Goal):
     # 扣完底金需要的次数
     down_num = models.IntegerField(default=1, null=False)
     # 平均每次要扣的
-    average = models.IntegerField(null=False)
+    average = models.DecimalField(max_digits=12, decimal_places=2, null=False)
     # 活动押金
     activate_deposit = models.DecimalField(max_digits=12, decimal_places=2, null=False)
     # 累计距离,只对自由模式有效
@@ -123,6 +123,8 @@ class RunningGoal(Goal):
                 self.none_punch_days = 1
             elif self.none_punch_days >= 1 and self.down_payment > 0:
                 print("如果不良天数不等于1")
+                #防止修改数据库debug而出现的错误
+                self.guaranty = 0
                 # 如果是日常模式
                 if self.guaranty == 0:
                     # 底金次数
@@ -193,23 +195,33 @@ class RunningGoal(Goal):
         Activity.objects.update_person(RunningGoal.get_activity())
         Activity.objects.update_coeff(RunningGoal.get_activity(), -self.coefficient)
 
-
+import base64
 # TODO
 class RunningPunchRecordManager(models.Manager):
     # 创建一个新的record
-    def create_record(self, goal, filecontent, filename, distance,punch_time, document):
+    def create_record(self, goal, filename, distance,punch_record_time, document,base64_str):
+        print(3333333333333333333333333333333333333333)
         # 文件存储的实际路径
-        filePath = os.path.join(settings.MEDIA_DIR, filename)
-        # 引用所使用的路径
-        refPath = os.path.join(settings.MEDIA_ROOT, filename)
-        # 写入文件内容
-        with open(filePath, 'wb') as f:
-            f.write(filecontent)
+        filePath = os.path.join(settings.MEDIA_DIR, timezone.now().strftime("%Y-%m-%d")+"/")
+        # # 引用所使用的路径
+        refPath = os.path.join(settings.MEDIA_ROOT, timezone.now().strftime("%Y-%m-%d")+"/")
+        #mysql存储的地址
+        file_filepath = filePath+filename
+        file_refpath = refPath+filename
+        if not os.path.exists(filePath):
+            os.makedirs(filePath)
+            print(444444444444444444444444444444444)
+       # 写入文件内容
+        with open(filePath+filename, 'wb') as f:
+            f.write(base64_str)
+            print("保存图片成功")
         # 如果是日常模式打卡，则规定distance必须为日常距离
         if goal.goal_type:
             distance = goal.kilos_day
-        record = self.create(goal=goal, voucher_ref=refPath, voucher_store=filePath, distance=distance,record_time = punch_time,
+        print(666666666666666666666666666666666666)
+        record = self.create(goal=goal, voucher_ref=file_refpath, voucher_store=file_filepath, distance=distance,record_time = punch_record_time,
                              document=document)
+        print(555555555555555555555555555555555555555)
         # 如果是自由模式, 则计算剩余距离
         if not goal.goal_type:
             goal.left_distance -= distance
@@ -290,7 +302,7 @@ class RunningPunchRecord(models.Model):
     # voucher_ref = models.CharField(max_length=256, null=False)
     voucher_ref = models.TextField(null=False)
     # 截图的存储地址
-    voucher_store = models.CharField(max_length=512, null=False)
+    voucher_store = models.TextField(null=False)
     # 跑步距离
     distance = models.FloatField(default=0)
     # 被赞数

@@ -76,6 +76,7 @@ def calc_bonus_job(goal_class):
     all_pay = 0
     all_coffe = 0
     # 只有处于活动状态的目标才参与计算
+    print(timezone.now())
     for goal in goal_class.objects.filter(status="ACTIVE"):
         print("开始计算需要每日金额分配")
         pay, coffe = goal.check_punch()

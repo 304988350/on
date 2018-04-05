@@ -89,20 +89,20 @@ inform_articles = [{
 }]
 
 article_leizhu = [
+    {
+        # On!说明
+        'title': '擂主模式开始啦！打卡最高瓜分10万',
+        'description': '1元瓜分10万，夭寿啦！！！',
+        'image': 'http://mmbiz.qpic.cn/mmbiz_jpg/GsETib8eibZY1yOTgf5hPjnxQqETtI7Ziawn9bx7wJOl05MWrZduCic0kS0O0vebpDVFzdeEhMJCeADFurYNCpm5FQ/0',
+        'url': 'https://mp.weixin.qq.com/s?__biz=MzI2Mjc4OTU4Ng==&mid=2247483817&idx=1&sn=6855ad2314c6775f1d93aeed0814b9a7&chksm=ea448114dd33080228d4fd03d2d6756c708402146c09ed4be2b45d242d99cc53d87a3287f811#rd'
+    },
     # {
     #     # On!说明
     #     'title': '擂主模式开始啦！打卡最高瓜分10万',
     #     'description': '1元瓜分10万，夭寿啦！！！',
-    #     'image': 'http://mmbiz.qpic.cn/mmbiz_jpg/GsETib8eibZY1yOTgf5hPjnxQqETtI7Ziawn9bx7wJOl05MWrZduCic0kS0O0vebpDVFzdeEhMJCeADFurYNCpm5FQ/0',
+    #     'image': 'http://mmbiz.qpic.cn/mmbiz_jpg/GsETib8eibZY3cPu5XAXukpkgHw23PmO0agVtXkHWa9VDrYZ3C8BtYBahFsawnMZiaBDoib4V9Dl9N5Pa4ZX7dx9Tg/0',
     #     'url': 'https://mp.weixin.qq.com/s?__biz=MzI2Mjc4OTU4Ng==&mid=2247483817&idx=1&sn=6855ad2314c6775f1d93aeed0814b9a7&chksm=ea448114dd33080228d4fd03d2d6756c708402146c09ed4be2b45d242d99cc53d87a3287f811#rd'
-    # },
-    {
-        # On!说明
-        'title': '什么?今日提现,一秒成土豪',
-        'description': '你还在等什么?现在提现即可获取233,333,333',
-        'image': 'http://mmbiz.qpic.cn/mmbiz_jpg/GsETib8eibZY3cPu5XAXukpkgHw23PmO0agVtXkHWa9VDrYZ3C8BtYBahFsawnMZiaBDoib4V9Dl9N5Pa4ZX7dx9Tg/0',
-        'url': 'http://mp.weixin.qq.com/s/31sf5K_WZNP2Ulnw81R0cA'
-    }
+    # }
 ]
 # from on.temp.template_map import template
 from on.temp.push_template import do_push
@@ -183,7 +183,6 @@ app_information = 'App将在4月份上线，敬请期待！'
 # 固定回复模板
 inform_str = '请稍等，On!君还在路上！'
 withdraw = "我的房间->个人中心->我的钱包->提现"
-
 scan = "欢迎关注On！"
 introduce_informmation = ""
 
@@ -231,10 +230,10 @@ def wechat_check(request):
                     print("扫码用户的openid:{},id:{}".format(openid,user_id))
                     userinfo = UserInfo.objects.check_user(openid)
                     create_time = timezone.now()
-                    if create_time.strftime("%Y-%m-%d") == "2018-04-1":
-                        fools_day = 1
-                    else:
-                        fools_day = 0
+                    # if create_time.strftime("%Y-%m-%d") == "2018-04-1":
+                    #     fools_day = 1
+                    # else:
+                    #     fools_day = 0
                     #如果该用户关系已经存在，那么就不创建该用户关系表
                     if len(UserInvite.objects.filter(invite=openid))>0:
                         print("用户关系已经存在，则什么也不做")
@@ -243,7 +242,7 @@ def wechat_check(request):
                         print("用户关系不存在，则创建用户关系表")
                     # 创建用户关系
                         UserInvite.objects.create(user_id=user_id, invite=openid, create_time=create_time,
-                                                  fools_day=fools_day)
+                                                  fools_day=0)
                     # 创建用户邀请数量表
                         Invitenum.objects.undate_num(user_id=user_id)
                         # 增加用户赚取收益比例
@@ -274,38 +273,30 @@ def wechat_check(request):
 
 @oauth
 def wechat_pay(request):
-    # attach 里带了新建目标的 id
-    user = request.session['user']
-    if request.POST:
-        openid = user.wechat_id
-        # if settings.DEBUG:
-        #     fee = 1
-        # else:
-        rem = request.POST["rem"]
-        reality = request.POST['reality']
-        deserve = request.POST["deserve"]
-        # 余额需要支付的钱
-        # 如果使用余额
-        if rem == '1':
-            # 实际应该要付的金额可以直接传过去
-            if float(reality) > 0.01:
-                fee = int(float(reality) * 100)
-                goal_id = request.POST['goal']
-                order_res = payClient.order.create(trade_type="JSAPI",
-                                                   body="目标活动押金",
-                                                   total_fee=fee,
-                                                   notify_url=NotifyUrl,
-                                                   user_id=openid,
-                                                   detail="支付活动目标的押金",
-                                                   device_info="WEB",
-                                                   attach=goal_id)
-                prepay_id = order_res['prepay_id']
-                pay_code = payClient.jsapi.get_jsapi_params(prepay_id=prepay_id)
-                return JsonResponse(pay_code)
-            # 如果实际应该要付的金额<=0.01，那么就直接让用户支付0.01
-            else:
-                if float(reality) == 0.01:
+    try:
+        # attach 里带了新建目标的 id
+        user = request.session['user']
+        if request.POST:
+            openid = user.wechat_id
+            # if settings.DEBUG:
+            #     fee = 1
+            # else:
+            rem = request.POST["rem"]
+            #实际付出的钱,必须正数，防止恶意请求
+            reality = abs(request.POST['reality'])
+            #应该要付出的钱
+            deserve = abs(request.POST["deserve"])
+            # 余额需要支付的钱
+            # 如果使用余额
+            if rem == '1':
+                #查询用户现在的余额是多少
+                user_balance_now = UserInfo.objects.get(user_id=user.user_id).balance
+                # 实际应该要付的金额可以直接传过去
+                if float(reality) > 0.01:
+                    #若实际支付出去的金额大于0的话，说明余额的钱不够全部支付金额的
                     fee = int(float(reality) * 100)
+                    #余额清零
+                    UserInfo.objects.clear_balance(user_id=user.user_id)
                     goal_id = request.POST['goal']
                     order_res = payClient.order.create(trade_type="JSAPI",
                                                        body="目标活动押金",
@@ -318,27 +309,49 @@ def wechat_pay(request):
                     prepay_id = order_res['prepay_id']
                     pay_code = payClient.jsapi.get_jsapi_params(prepay_id=prepay_id)
                     return JsonResponse(pay_code)
+                # 如果实际应该要付的金额<=0.01，那么就直接让用户支付0.01
                 else:
-                    return HttpResponse(403)
-                    # fee = int(float(request.POST['reality']) * 100)
-        # 不使用余额
+                    if float(reality) == 0.01:
+                        #现在是等于0.01的情况，要判断余额确实大于应付
+                        assert user_balance_now>int(float(deserve) * 100)
+                        fee = int(float(reality) * 100)
+                        goal_id = request.POST['goal']
+                        order_res = payClient.order.create(trade_type="JSAPI",
+                                                           body="目标活动押金",
+                                                           total_fee=fee,
+                                                           notify_url=NotifyUrl,
+                                                           user_id=openid,
+                                                           detail="支付活动目标的押金",
+                                                           device_info="WEB",
+                                                           attach=goal_id)
+                        prepay_id = order_res['prepay_id']
+                        pay_code = payClient.jsapi.get_jsapi_params(prepay_id=prepay_id)
+                        #使用完余额，应该将钱从余额里面扣除
+                        # UserInfo.objects.use_balance(user_id=user.user_id,pay_delay = decimal.Decimal(-deserve))
+                        return JsonResponse(pay_code)
+                    else:
+                        return HttpResponse(403)
+                        # fee = int(float(request.POST['reality']) * 100)
+            # 不使用余额
+            else:
+                # fee = int(float(request.POST['deserve']) * 100)
+                fee = int(float(deserve) * 100)
+                goal_id = request.POST['goal']
+                order_res = payClient.order.create(trade_type="JSAPI",
+                                                   body="目标活动押金",
+                                                   total_fee=fee,
+                                                   notify_url=NotifyUrl,
+                                                   user_id=openid,
+                                                   detail="支付活动目标的押金",
+                                                   device_info="WEB",
+                                                   attach=goal_id)
+                prepay_id = order_res['prepay_id']
+                pay_code = payClient.jsapi.get_jsapi_params(prepay_id=prepay_id)
+                return JsonResponse(pay_code)
         else:
-            # fee = int(float(request.POST['deserve']) * 100)
-            fee = int(float(deserve) * 100)
-            goal_id = request.POST['goal']
-            order_res = payClient.order.create(trade_type="JSAPI",
-                                               body="目标活动押金",
-                                               total_fee=fee,
-                                               notify_url=NotifyUrl,
-                                               user_id=openid,
-                                               detail="支付活动目标的押金",
-                                               device_info="WEB",
-                                               attach=goal_id)
-            prepay_id = order_res['prepay_id']
-            pay_code = payClient.jsapi.get_jsapi_params(prepay_id=prepay_id)
-            return JsonResponse(pay_code)
-    else:
-        return HttpResponseNotFound
+            return HttpResponseNotFound
+    except AssertionError as e:
+        return JsonResponse({"status":403})
 
 
 # 已开通企业付款，实现微信转账接口
@@ -348,7 +361,9 @@ def transfer_to_person(request):
         if settings.DEBUG:
             price = 100
         else:
+            #从前端传过来的提现金额
             price = int(100 * float(request.POST['price']))
+            print(price,"用户传递到后台的金额*100显示")
             balance = UserInfo.objects.get(user_id=user.user_id).balance
             assert price == int(100 * balance)
         if price < 100:
@@ -362,18 +377,27 @@ def transfer_to_person(request):
                                                    check_name="NO_CHECK")
             else:
                 print("用户{}开始发起提现".format(user.user_id))
+                #检查用户现在的余额是多少
+                user_balance_now = UserInfo.objects.get(user_id=user.user_id).balance
+                #提现金额必须等于现在的金额，否则无法提现
+                assert price == int(100 * user_balance_now)
+                print("用户现在的余额是多少{}".format(user_balance_now))
+                # if user_balance_now>0:
                 data = payClient.transfer.transfer(user_id=user.wechat_id,
                                                    amount=price,
                                                    desc="用户{0}发起提现".format(user.user_id),
                                                    check_name="NO_CHECK")
                 print("用户开始发起提现，提款成功的状态码{}".format(data['result_code']))
+
             if data['result_code'] == 'SUCCESS':
                 print(data['result_code'],'提款成功的状态码')
                 UserWithdraw.objects.create_withdraw(openid=user.wechat_id,
                                                      amount=price,
-                                                     trade_data=data)
+                                                     trade_data=data,
+                                                     user_id = user.user_id)
                 # 更新用户的余额
-                UserInfo.objects.clear_balance(user_id=user.user_id)
+                user_balance = UserInfo.objects.clear_balance(user_id=user.user_id)
+                print("用户")
                 price = "%.2f" % (price / 100)
                 print(price)
                 # 查询当前余额

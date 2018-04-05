@@ -33,7 +33,7 @@ def oauth(method):
     @functools.wraps(method)
     def warpper(request, *args, **kwargs):
         if settings.DEBUG:
-            user_info = {"openid": "o0jd6wgPxXAFK9aifqR858FOWDV0",
+            user_info = {"openid": "o0jd6wqeLKWNJ-zruWoW-pD2YLdg",
                          "nickname": "",
                          "sex": "1",
                          "headimgurl": "http://wx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/46",
@@ -111,7 +111,6 @@ def show_activities(request):
 
     return render(request, 'activity/index.html', {
         'activities': activities, "fools": fools, 'join': join})
-
 
 # 展示用户的用户的协议
 def agreement(request):
@@ -410,7 +409,7 @@ def change_name(request):
     user = request.session["user"]
     if request.GET:
         new_name = request.GET.get("name")
-        print(new_name, "---------------------")
+        print("用户的新名字{}".format(new_name))
         user.nickname = new_name
         try:
             user.save()
@@ -515,7 +514,7 @@ def foolsday_rank(request):
     user = request.session["user"]
     user_message = []
     myself = []
-    user_list = FoolsDay.objects.all().order_by("-point_all")
+    user_list = FoolsDay.objects.filter(is_no_join=1).order_by("-point_all")
     for users in user_list[:99]:
         # user_id = users.user_id
         user_data = UserInfo.objects.get(user_id=users.user_id)
@@ -546,5 +545,4 @@ def foolsday_rank(request):
             "invite_num": my_invite_num,
             "point":  FoolsDay.objects.filter(user_id=user.user_id)[0].point_all,
         }]
-        print("当前该用户的积分是{}".format(point))
     return render(request, 'festival/aprilFoolsDay/rank.html', {"user_message": user_message,"myself":myself,"user_id":user.user_id})

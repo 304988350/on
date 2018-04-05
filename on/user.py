@@ -22,6 +22,12 @@ class UserManager(models.Manager):
         user.balance = decimal.Decimal(0)
         user.save()
 
+    # 使用余额
+    def use_balance(self, user_id,pay_delay):
+        user = self.get(user_id=user_id)
+        user.balance += decimal.Decimal(pay_delay)
+        user.save()
+
     # 新进账的钱, 要同时增加累计收益与余额
     def update_balance(self, user_id, pay_delta):
         user = self.get(user_id=user_id)
@@ -51,6 +57,9 @@ class UserManager(models.Manager):
         # 活动结束之后，将用户的累计收益改为0
         print("开始修改累计收益{}".format(price))
         user.add_money = 0
+        print("将用户的累计收益改为0")
+        user.extra_money = 0
+        print("将用户的额外收益改成0")
         print("修改累计收益成功{}".format(user.add_money))
         user.save()
 
@@ -211,11 +220,12 @@ class UserPayManager(models.Manager):
                     time_end=trade_data['time_end'])
 
     # 增加用户提现记录
-    def create_withdraw(self, openid, amount, trade_data):
+    def create_withdraw(self, openid, amount, trade_data,user_id):
         self.create(openid=openid,
                     payment_no=trade_data['payment_no'],
                     partner_trade_no=trade_data['partner_trade_no'],
-                    amount=amount)
+                    amount=amount,
+                    user_id = user_id)
 
     # 获取用户退款记录
     def create_refund(self, openid, goal_id):
@@ -287,7 +297,7 @@ class UserTrade(models.Model):
 
     objects = UserPayManager()
 
-
+#TODO增加用户的id字段
 # 用户提现记录
 class UserWithdraw(models.Model):
     trade_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -301,6 +311,8 @@ class UserWithdraw(models.Model):
     payment_no = models.CharField(null=True, max_length=255)
     # 提现时间
     finish_time = models.DateTimeField(null=False, default=timezone.now)
+    #用户的user_id
+    user_id = models.IntegerField(default=0)
     objects = UserPayManager()
 
 

@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'on.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'on_test',
+        'NAME': 'emojitest',
         # 'NAME': 'deploy',
         'USER': 'root',
         'PASSWORD': 'wang',
@@ -93,7 +93,6 @@ DATABASES = {
         'PORT': '3306',
     }
 }
-
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',

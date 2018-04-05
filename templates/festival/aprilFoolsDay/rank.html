@@ -65,7 +65,7 @@
         .user_message_list_3{
             display: block;
             float: left;
-            width: 30%;
+            width: 40%;
         }
         .user_message_list_4{
             display: block;
@@ -206,10 +206,12 @@
                             </div>
                             <div class="user_message_list_3">
                                 <p class="p_overflow">{{ list.nickname }}</p>
-                                <p>积分：{{ list.point }}</p>
+                                <!-- <p>积分：{{ list.point }}</p> -->
                             </div>
                             <div class="user_message_list_4">
-                                <p class="p_overflow">成功骗到：{{ list.invite_num }}人</p>
+                                <!-- <p class="p_overflow">成功骗到：{{ list.invite_num }}人</p> -->
+                                <p class="p_overflow">积分：{{ list.point }}</p>
+                                
                             </div>
                         </div>
                     {% endfor %}
@@ -228,10 +230,11 @@
                     </div>
                     <div class="user_message_list_3">
                         <p class="p_overflow" style="">{{ list.nickname }}</p>
-                        <p style="line-height: 22.4517px;">积分：{{ list.point }}</p>
+                        <!-- <p style="line-height: 22.4517px;">积分：{{ list.point }}</p> -->
                     </div>
                     <div class="user_message_list_4">
-                        <p class="p_overflow" style="line-height: 44.9033px;">成功骗到：{{ list.invite_num }}人</p>
+                        <!-- <p class="p_overflow" style="line-height: 44.9033px;">成功骗到：{{ list.invite_num }}人</p> -->
+                        <p class="p_overflow" style="line-height: 44.9033px;">积分：{{ list.point }}</p>
                     </div>
                 </div>
                 {% endfor %}
@@ -253,10 +256,10 @@
         <div class="hide_box" id="fools_join_but_box">
             <h5 style="text-align: center;margin: 16px 0 10px;font-size: 16px;">活动声明</h5>
             <p style="font-size: 12px;">
-                1.此活动仅在愚人节（4月1日）为用户提供整蛊娱乐方式而举办，活动将以免费的形式开放给所有平台用户参与。平台将不在外推广此活动，因此该活动仅限平台内用户。<br>
-                2.参与者应自行“合理”整蛊好友，不得以利益作诱导传播。本平台主营业务为行为改变付费，不应以此活动扭曲事实及影响本平台形象。（否则依法追究其责任。）<br>
-                3.如因活动违反相关规定或其他特殊情况暂停发放福利，平台将另行通。<br>
-                4.此活动中的奖励记为额外收益，非义务发放，不可为此追究本平台责任。<br>
+                1.在4月1日愚(zuo)人(si)节通过邀请码邀请好友在平台内“提现”，若好友点击假“提现”则视为成功；若好友点击假“余额”(233333333)则视为失败。<br>
+                2.成功+3分，失败-1分<br>
+                3.点击参与活动后，即可开始计算，并可查询当前排行。<br>
+                4.分数将在23:33:33结算，并给前100名与最后1名发放奖励。<br>
             </p>
         </div>
     </div>
@@ -300,7 +303,8 @@
             $(".user_message_list_2").css("width",HH);
 
 
-            $(".user_message_list_3 p").css("lineHeight",HH/2+'px');
+            //$(".user_message_list_3 p").css("lineHeight",HH/2+'px');
+            $(".user_message_list_3 p").css("lineHeight",HH+'px');
             $(".user_message_list_4 p").css("lineHeight",HH+'px');
 
 

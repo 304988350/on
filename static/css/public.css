@@ -98,3 +98,10 @@ iframe {
     animation-name: fadeInUp;
     animation-duration: 1s;
 }
+
+/* */
+.p_overflow{
+	text-overflow:ellipsis;
+	overflow:hidden;
+	white-space:nowrap;
+}

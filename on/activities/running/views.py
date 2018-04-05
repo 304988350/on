@@ -104,6 +104,7 @@ def get_days(goal):
 
 
 def show_running_goal(request, pk):
+    ###开始
     user = request.session["user"]
     goal_id = pk
     goal = RunningGoal.objects.filter(goal_id=goal_id).filter(activity_type=RunningGoal.get_activity()).first()
@@ -112,7 +113,8 @@ def show_running_goal(request, pk):
             return render(request, 'goal/finish.html',
                           {
                               'goal': goal,
-                              'goal_type': RunningGoal.get_activity()
+                              'goal_type': RunningGoal.get_activity(),
+                                "headimg":user.headimgurl
                           })
         else:
             # 免签券数量查询
@@ -124,7 +126,7 @@ def show_running_goal(request, pk):
             # TODO:FAKE
             app = fake_data([app])[0]
             # 查询 Activity 相关的头像信息
-            person_goals = RunningGoal.objects.filter(status="ACTIVE")[:5]
+            person_goals = RunningGoal.objects.filter(status="ACTIVE")[:10]
             persons = set()
             for person_goal in person_goals:
 
@@ -134,7 +136,7 @@ def show_running_goal(request, pk):
             lastday = timezone.now() - timedelta(days=1)
             today = timezone.now()
             random_records = RunningPunchRecord.objects.filter(record_time__range=(lastday, today)).order_by(
-                "-record_time")[:20]
+                "-record_time")[:30]
             # activate_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
             # 获取邀请了多少好友
             num = UserInvite.objects.filter(user_id=request.session["user"].user_id).count()
@@ -202,3 +204,5 @@ def show_running_goal(request, pk):
                 return page_not_found(request)
     else:
         return page_not_found(request)
+
+

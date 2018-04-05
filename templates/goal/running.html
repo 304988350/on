@@ -72,6 +72,7 @@
         #reading-confirm-btn{
             background-color: #ffffff;
             color:rgba(31,162,255,1) ;
+            border-top: 1px solid rgba(31,162,255,1);
         }
 
         .icon-icontjzp{
@@ -264,6 +265,34 @@
         .coloum-space{
             margin-top: 5px;
             margin-bottom: 5px;
+        }
+        .mask_on{
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            background: rgba(0,0,0,.6);
+        }
+
+        .mask_on_1{
+            position: fixed;
+            z-index: 99999;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            background: rgba(0,0,0,.1);
+        }
+        .mask_on__1{
+            position: fixed;
+            z-index: 9990;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            background: rgba(0,0,0,.0);
         }
 
     </style>
@@ -930,8 +959,9 @@
                     <textarea class="weui-textarea" id="document_text" placeholder="写下此刻的感想与收获吧..." rows="3" style="margin: 10px auto;font-size: 13px;"></textarea>
                 </div>
                 <div id="upload-image-panel" style="height: 200px;overflow: hidden;">
+                    <img src="" id="upload_img_file" style="position: absolute;width: auto;height: 200px;opacity: 1;z-index: 501" >
                     <p>+ 点击上传照片</p>
-{#                     <img src="http://img1.imgtn.bdimg.com/it/u=594559231,2167829292&fm=27&gp=0.jpg">#}
+                    <input type="file" accept="image/*" multiple style="background-color: red;position: absolute;width: 100%;height: 200px;opacity: 0;z-index: 502" >
                 </div>
                 <div style="height: 40px;">
 
@@ -943,87 +973,25 @@
 		</div>
 	</div>
 
-
-
-
-    <!--上传任务弹出框-->
-    <!--  上传3 张 图片-->
-    <!--
-    <div id="upload-popup" class="weui-popup__container popup-bottom">
-		<div class="weui-popup__overlay"></div>
-		<div class="weui-popup__modal">
-			<div class="modal-content">
-                <div class="row-center center" id="upload-popup__distance-panel" style="height: 2rem;justify-content:inherit;">
-                    {% if goal.goal_type == 0 %}
-                    <span style="font-size: 1rem;font-weight: 600;">公里数</span>
-
-                    <div class="row-center center">
-                        <div class="mdl-textfield mdl-js-textfield" id="upload-popup__distance-text">
-                            <input class="mdl-textfield__input" type="number" id="page-input">
-                            <label class="mdl-textfield__label" for="upload-popup__distance-input"></label>
-                        </div>
-                        <span class="panel__target-text__side">km</span>
-                    </div>
-                    {% else %}
-                    <span style="font-size: 1rem;font-weight: 600;">公里数</span>
-
-                    <div class="row-center center">
-                        <span id="page-input" style="margin-right: 10px;">{{ goal.kilos_day }}</span>
-                        <span class="panel__target-text__side">km</span>
-                    </div>
-                    {% endif %}
-                </div>
-
-                <div style="overflow: hidden;border-bottom: 1px solid  #ededed;width: 80%;margin: 0 auto;height: 100px;overflow: hidden;">
-                    <textarea class="weui-textarea" id="document_text" placeholder="写下此刻的感想与收获吧..." rows="3" style="margin: 10px auto;font-size: 13px;"></textarea>
-                </div>
-
-
-                <div id="upload_image" class="weui-flex" style="width: 80%;margin: 0 auto;height: 120px;">
-                    <div class="weui-flex__item upload-image-panel_1" style="position: relative;">
-                        <div class="upload-image-panel_1_box"></div>
-                        <div class="box_content upload-image-panel_1_i" style="text-align: center;">
-                            <i class="iconfont icon-icontjzp" ></i>
-                        </div>
-
-
-{#                        <img style='width:90%;' class='box_content' src="http://img1.imgtn.bdimg.com/it/u=594559231,2167829292&fm=27&gp=0.jpg">#}
-                    </div>
-                    <div class="weui-flex__item upload-image-panel_2" style="position: relative;">
-                        <div class="upload-image-panel_2_box"></div>
-                        <div class="box_content upload-image-panel_2_i" style="text-align: center;display: none">
-                            <i class="iconfont icon-icontjzp" ></i>
-                        </div>
-{#                        <img style='width:90%;' class='box_content' src="http://img1.imgtn.bdimg.com/it/u=594559231,2167829292&fm=27&gp=0.jpg">#}
-
-                    </div>
-                    <div class="weui-flex__item upload-image-panel_3" style="position: relative;">
-                        <div class="upload-image-panel_3_box"></div>
-                        <div class="box_content upload-image-panel_3_i" style="text-align: center;;display: none">
-                            <i class="iconfont icon-icontjzp" ></i>
-                        </div>
-{#                        <img style='width:90%;' class='box_content' src="http://img1.imgtn.bdimg.com/it/u=594559231,2167829292&fm=27&gp=0.jpg">#}
-                   </div>
-                </div>
-
-
-
-				<button class="weui-btn weui-btn_primary" id="reading-confirm-btn" style="border: 1px solid rgba(0,0,0,0.2)">
-                    确认
-				</button>
-			</div>
-		</div>
-	</div>
--->
-
     <!-- 弹窗-->
     <div class="">
 
 
         <div class="mask_on" style="display: none"></div>
+        <div class="mask_on_1" style="display: none"></div>
+        <div class="mask_on__1" ></div>
 
-        <div class="qqGroupCode_box" style="display: none">
-            <img src="/static/images/on_share/on_share_run.jpg" style="width: 100%;" >
+        <div class="qqGroupCode_box" style="opacity: 0;display: block;width: 70%;">
+            <div class="swiper-container_on_share_run">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" data-link="#">
+                        <img src="/static/images/on_share/on_share_run_1.jpg" style="width: 100%;" >
+                    </div>
+                    <div class="swiper-slide" data-link="#">
+                        <img src="/static/images/on_share/on_share_run_2.jpg" style="width: 100%;" >
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="activityDescription_box" style="display: none">
@@ -1038,7 +1006,7 @@
                 </p>
 
                 <p style="font-size: 12px;line-height:18px;">
-                    每次记录都需上传一张图片作打卡记录，图片必须包含距离、速度、日期等基本信息。（跑步软件截图、跑步机照片均可。）跑步配速应在<u>2’02’’~12’00’’</u>之间，每次记录不得少于<u>1km</u>。每日<u>23:00</u>前需上传<u>当日</u>跑步记录，逾期不可补交。
+                    每次记录都需上传一张图片作打卡记录，图片必须包含距离、速度、日期等基本信息。（跑步软件截图、跑步机照片均可。）跑步配速应在<u>2’02’’~12’00’’</u>之间，每次记录不得少于<u>1km</u>。每日<u>23:45</u>前需上传<u>当日</u>跑步记录，逾期不可补交。
                 </p>
                 <p style="font-size: 12px;line-height:18px;">
                     注：跑步机照片需添加时间水印，以免被举报或盗图。另外由于本活动或受天雨影响，因此用户也可在每日<u>18:00</u>前向客服申报获取免签等机会。（仅限<u>日常模式</u>，或收取一定费用。）（举报：当举报审核通过，或当日直接计为未完成。）
@@ -1077,10 +1045,16 @@
     <script type="text/javascript" src="/static/js/public.js"></script>
 {#	<script type="text/javascript" src="/static/js/jquery.min.js"></script>#}
 {#	<script type="text/javascript" src="/static/js/fastclick.js"></script>#}
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+
 	<script>
 		// fast click binding
 		$(function () {
 			FastClick.attach(document.body);
+			$(".mask_on__1").hide();
+			$(".qqGroupCode_box").hide();
+			$(".qqGroupCode_box").css("opacity","1");
+
 		});
 		//去除广告
         $("#_embed_v3_dc").detach();
@@ -1091,6 +1065,13 @@
 	<script type="text/javascript" src="/static/js/material.min.js"></script>
 	<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script type='text/javascript' src='/static/js/swiper.min.js' charset='utf-8'></script>
+    <script>
+        var swiper_on_share = new Swiper('.swiper-container_on_share_run', {
+            autoplay: true,
+            loop:true,
+        });
+    </script>
+
 
     <!--配置CSRF保护-->
     <script>
@@ -1201,11 +1182,11 @@
                 //自由模式
                 $("#page-input").val("");
                 $("#document_text").val("");
-                $("#upload-image-panel").html("<p>+ 点击上传照片</p>");
+                //$("#upload-image-panel").html("<p>+ 点击上传照片</p>");
             {% else %}
                 //日常模式
                 $("#document_text").val("");
-                $("#upload-image-panel").html("<p>+ 点击上传照片</p>");
+                //$("#upload-image-panel").html("<p>+ 点击上传照片</p>");
             {% endif %}
 
         });
@@ -1288,6 +1269,7 @@
                 initialSlide :100
             });
 
+
             //打卡说明
             $("#activityDescription_but").click(function () {
                 $(".activityDescription_box").show();
@@ -1313,6 +1295,13 @@
                 $(".activityDescription_box").hide();
                 $(this).hide();
             });
+
+            $(".mask_on__1").click(function () {
+                $(".qqGroupCode_box").hide();
+                $(".qqGroupCode_box").css("opacity","1");
+                $(this).hide();
+            });
+
         });
 
     </script>
@@ -1409,323 +1398,6 @@
 
     </script>
 
-    <!-- 上传 3 张图片 -->
-    <!--
-    <script>
-        wx.ready(function() {
-
-        });
-
-        var images = {
-            localId: [],
-            serverId: []
-        };
-
-        $("#upload_image").click(function () {
-            //console.log("上传图片");
-            wx.chooseImage({
-                count: 1,
-                sourceType: ['album'],
-                success: function (res) {
-                    images.localId = res.localIds;
-                    // alert('已选择 ' + res.localIds.length + ' 张图片');
-                    if(res.localIds.length== 1){
-                        $(".upload-image-panel_2_i").hide();
-                        $(".upload-image-panel_1_i").hide();
-                        $(".upload-image-panel_3_i").hide();
-
-                        $(".upload-image-panel_1_box").html("<img class='box_content' style='width:90%;' src=\""+images.localId[0]+"\">");
-                    }else if(res.localIds.length== 2){
-                        $(".upload-image-panel_3_i").show();
-                        $(".upload-image-panel_1_i").hide();
-                        $(".upload-image-panel_2_i").hide();
-
-                        $(".upload-image-panel_1_box").html("<img class='box_content' style='width:90%;' src=\""+images.localId[0]+"\">");
-                        $(".upload-image-panel_2_box").html("<img class='box_content' style='width:90%;' src=\""+images.localId[1]+"\">");
-                    }else if(res.localIds.length== 3){
-                        $(".upload-image-panel_1_i").hide();
-                        $(".upload-image-panel_2_i").hide();
-                        $(".upload-image-panel_3_i").hide();
-
-                        $(".upload-image-panel_1_box").html("<img class='box_content' style='width:90%;' src=\""+images.localId[0]+"\">");
-                        $(".upload-image-panel_2_box").html("<img class='box_content' style='width:90%;' src=\""+images.localId[1]+"\">");
-                        $(".upload-image-panel_3_box").html("<img class='box_content' style='width:90%;' src=\""+images.localId[2]+"\">");
-                    }
-                }
-            });
-        });
-
-        $("#reading-confirm-btn").click(function () {
-            if (images.localId.length == 0) {
-                $.toast("请先上传图片", "cancel");
-                return;
-            }
-            {% if goal.goal_type == 0 %}
-            var distance = parseFloat($("#page-input").val());  //跑步路程
-            {% else %}
-            var distance = parseFloat($("#page-input").html());   //跑步路程
-            {% endif %}
-            if(isNaN(distance)){
-                $.toast("请填写有效的公里数", "cancel");
-                return;
-            }
-            var limit = parseFloat($(".panel__target-text").html());
-            if(distance > limit){
-                $.toast("不能超过当日限制", "cancel");
-                return;
-            }
-            var i = 0, length = images.localId.length;
-            images.serverId = [];
-
-            function successUpload() {
-                $.toast("上传成功", "success");
-                $("#reading-confirm-btn").text('上传成功');
-                $.closePopup();
-                $("body").removeClass("popup-open");
-                uploadBtnFinish("已成功打卡");
-            }
-
-            function upload() {
-                var document_val=$("#document_text").val();
-                if (document_val.length > 200) {
-                    $.toptip("不能超过200字", "error");
-                    $("#document_text").focus();
-                    return
-                }
-                $("#reading-confirm-btn").text('上传中');
-                $("#reading-confirm-btn").append('<i class="weui-loading"></i>');
-
-                wx.uploadImage({
-                    localId: images.localId[i],
-                    success: function (res) {
-                        i++;
-                        images.serverId.push(res.serverId);
-                        if (i < length) {
-                            upload();
-                        }
-                        else if (i === length) {
-                            alert(i);
-                            alert(res.serverId);
-                            alert(distance);
-                            alert(document_val);
-                            alert($("#goal-id__get").html());
-                            $.get('/api/running_sign_in', {
-                                "serverId": res.serverId,
-                                "distance": distance,
-                                "document":document_val,
-                                "goal": $("#goal-id__get").html()
-                            }, function (reponse) {
-                                alert(reponse.code);
-                                alert('77777777777777777777777777777');
-                                successUpload();
-                            });
-                        }
-                    },
-                    fail: function (res) {
-                        alert(JSON.stringify(res));
-                    }
-                });
-            }
-
-            upload();
-        });
-    </script>
-    -->
-
-
-    <!-- 上传 1 张图片 -->
-    <!-- -->
-    <script>
-
-        wx.ready(function() {
-            var images = {
-                localId: [],
-                serverId: []
-            };
-            $("#upload-image-panel").click(function () {
-                wx.chooseImage({
-                    count: 1,
-                    sourceType: ['album'],
-                    success: function (res) {
-                        images.localId = res.localIds;
-                        $("#upload-image-panel").html("");
-                        $("#upload-image-panel").html("<img src=\""+images.localId[0]+"\">");
-                    }
-                });
-            });
-
-            function time_1() {
-                var e = new Date ();
-                var H=e.getHours();
-                console.log(H);
-                if(H<23){
-                   return true
-                }else{
-                    return false
-                }
-            }
-
-            $("#reading-confirm-btn").on("click",function(){
-                //$(this).attr("disabled","disabled");
-                var document_val=$("#document_text").val();
-
-                if(document_val.length==0){
-
-                }else{
-                    if (document_val.length > 200) {
-                        $.toptip("不能超过200字", "error");
-                        $("#document_text").focus();
-                        return
-                    }
-
-                    var pattern = /^[a-zA-Z-—=+。，!！￥$#、？：“”；,.;'‘’\d\u4E00-\u9FA5]+$/i;
-
-                    if (pattern.test(document_val)){
-                    //alert( "输入正确：只包含中文、字母、数字 ");
-                    } else{
-                        $.toptip('含有符号，请重试！', 'error');
-                        $("#document_text").focus();
-                        return
-                    }
-                }
-
-
-
-                var Num=$(this).attr("Num");
-
-                if (time_1()) {
-                    console.log("可以打卡")
-                }else {
-                    $.toast("打卡时间已过", "cancel");
-                    return;
-                }
-
-                if (images.localId.length == 0) {
-                    $.toast("请先上传图片", "cancel");
-                    return;
-                }
-                {% if goal.goal_type == 0 %}
-                var distance = parseFloat($("#page-input").val());
-                if(distance>99.99){
-                    $.toast("请填写有效的公里数", "cancel");
-                    return;
-                }
-                {% else %}
-                var distance = parseFloat($("#page-input").text());
-                if(distance>99.99){
-                    $.toast("请填写有效的公里数", "cancel");
-                    return;
-                }
-                {% endif %}
-                if(isNaN(distance)){
-                    $.toast("请填写有效的公里数", "cancel");
-                    return;
-                }
-                var limit = parseFloat($(".panel__target-text").html());
-
-                {#if(distance > limit){#}
-                {#    $.toast("不能超过当日限制", "cancel");#}
-                {#    return;#}
-                {# }#}
-
-
-                var i = 0, length = images.localId.length;
-                images.serverId = [];
-
-                //$(this).hide();
-                $.showLoading();
-                $(".weui-toast_content").text("打卡中...");
-
-
-                function successUpload() {
-                    $.hideLoading();
-                    //window.location.reload();
-                    $.toast("上传成功", "success",function () {
-                        window.location.reload();
-                    });
-                    //return
-                    $("#reading-confirm-btn").text('上传成功');
-                    $.closePopup();
-                    $("#reading-confirm-btn").remove("disabled");
-                    $("body").removeClass("popup-open");
-                    uploadBtnFinish("已成功打卡");
-                }
-
-                function reopenedUpload(punch_id) {
-                    $("#reading-confirm-btn").text('上传中');
-                    $("#reading-confirm-btn").append('<i class="weui-loading"></i>');
-                    //alert(punch_id);
-                    wx.uploadImage({
-                        localId: images.localId[i],
-                        success: function (res) {
-                            i++;
-                            images.serverId.push(res.serverId);
-                            if (i < length) {
-                                reopenedUpload(punch_id)
-                            }
-                            else if (i === length) {
-                                //alert("1");
-                                $.get('/api/upload_again', {
-                                        "serverId": res.serverId,
-                                        "distance": distance,
-                                        "document":document_val,
-                                        "goal": $("#goal-id__get").html(),
-                                        "punch_id":punch_id
-                                    },
-                                    function (reponse) {
-
-                                    //alert(reponse.status);
-                                    successUpload();
-                                });
-                            }
-                        },
-                        fail: function (res) {
-                            alert(JSON.stringify(res));
-                        }
-                    });
-                }
-
-
-                function upload() {
-                    $("#reading-confirm-btn").text('上传中');
-                    $("#reading-confirm-btn").append('<i class="weui-loading"></i>');
-                    wx.uploadImage({
-                        localId: images.localId[i],
-                        success: function (res) {
-                            i++;
-                            images.serverId.push(res.serverId);
-                            if (i < length) {
-                                upload();
-                            }
-                            else if (i === length) {
-                                $.get('/api/running_sign_in', {
-                                        "serverId": res.serverId,
-                                        "distance": distance,
-                                        "document":document_val,
-                                        "goal": $("#goal-id__get").html()
-                                    },
-                                    function (reponse) {
-                                    successUpload();
-                                });
-                            }
-                        },
-                        fail: function (res) {
-                            alert(JSON.stringify(res));
-                        }
-                    });
-                }
-
-                if(Num=="2"){
-                    var punch_id=$("#reading-confirm-btn").attr("punch_id");
-                    reopenedUpload(punch_id)
-                }else{
-                    upload();
-                }
-
-            });
-
-        });
-    </script>
     <!--- 邀请 -->
     <script>
 
@@ -1739,8 +1411,8 @@
 
         var invite_num=Number({{ invite_num }});
 
-        if(invite_num>20){
-            $("#invite_num_plus_2").text('X1000%');
+        if(invite_num>10){
+            $("#invite_num_plus_2").text('X500%');
         }else if(invite_num==0){
             //$("#invite_num_plus_2").text('X1000%');
             $("#invite_num_plus_2").hide();
@@ -1749,6 +1421,225 @@
             $("#invite_num_plus_2").text('X'+invite_num_text+'%');
         }
 
+    </script>
+
+    <!-- 图片上传 改用 base64 -->
+    <script>
+
+        var base64_data='';
+        //图片转成base64 方法
+        function run(input_file,get_data){
+            /*input_file：文件按钮对象*/
+            /*get_data: 转换成功后执行的方法*/
+            if ( typeof(FileReader) === 'undefined' ){
+                alert("抱歉，你的浏览器不支持 FileReader，不能将图片转换为Base64，请使用现代浏览器操作！");
+            } else {
+                try{
+                    /*图片转Base64 核心代码*/
+                    var file = input_file.files[0];
+                    //这里我们判断下类型如果不是图片就返回 去掉就可以上传任意文件
+                    if(!/image\/\w+/.test(file.type)){
+                        alert("请确保文件为图像类型");
+                        return false;
+                    }
+                    var reader = new FileReader();
+                    reader.onload = function(){
+                        get_data(this.result);
+                    };
+                    reader.readAsDataURL(file);
+                }catch (e){
+                    alert('图片转Base64出错啦！'+ e.toString())
+                }
+            }
+        }
+        $(function () {
+            //input 上传图片
+           $("input[accept='image/*']").change(function () {
+               run(this, function (data) {
+                   base64_data=data;
+                   $('#upload_img_file').attr('src',base64_data);
+                   //+ 点击上传照片
+               });
+           });
+
+           //点击上传 按钮
+            $("#reading-confirm-btn").on("click",function() {
+                $(".weui-toast_content").text("提交中...");
+                $.showLoading();
+
+                var document_val=$("#document_text").val();
+
+                 /*  输入说明 控制长度 和 特殊字符 */
+                if(document_val.length==0){
+
+                }else{
+                    if (document_val.length > 200) {
+                        $.toptip("不能超过200字", "error");
+                        $("#document_text").focus();
+                        $.hideLoading();
+                        return
+                    }
+
+                    var pattern = /^[a-zA-Z-—=+。，!！￥$#、？：“”`~@%^&*(){}【】[ ;|；,.'‘’\d\u4E00-\u9FA5]+$/i;
+                    /*
+                    if (pattern.test(document_val)){
+
+                    }else{
+                       $.toptip('含有符号，请重试！', 'error',function () {
+                           $("#document_text").focus();
+                       });
+
+                       $.hideLoading();
+                       return
+                    }
+                    */
+
+                }
+
+                /*  判断上传 图片是否为空 */
+                console.log(base64_data);
+                if (base64_data == ''||base64_data==null || base64_data==undefined ) {
+                    $.toast("请先上传图片", "cancel");
+                    $.hideLoading();
+                    return;
+                }
+
+                /*  判断打卡 时间 */
+                if (time_1()) {
+                    console.log("可以打卡")
+                }else {
+                    $.toast("打卡时间已过", "cancel");
+                    $.hideLoading();
+                    return;
+                }
+
+                /*  获取公里数 */
+                {% if goal.goal_type == 0 %}
+                    var distance = parseFloat($("#page-input").val());
+                    if(distance>99.99){
+                        $.toast("请填写有效的公里数", "cancel");
+                        $.hideLoading();
+                        return;
+                    }
+                {% else %}
+                    var distance = parseFloat($("#page-input").text());
+                    if(distance>99.99){
+                        $.toast("请填写有效的公里数", "cancel");
+                        $.hideLoading();
+                        return;
+                    }
+                {% endif %}
+
+                if(isNaN(distance)){
+                    $.toast("请填写有效的公里数", "cancel");
+                    $.hideLoading();
+                    return;
+                }
+
+                /*  获取goal_id  */
+                var goal_id =$("#goal-id__get").html();
+                /*  ajax 提交 */
+
+                var Num=$(this).attr("Num");
+                if(Num=="2"){
+                    var punch_id=$("#reading-confirm-btn").attr("punch_id");
+                    reopenedUpload(distance,document_val,goal_id,punch_id)
+                }else{
+                    upload(distance,document_val,goal_id);
+                }
+
+                console.log("base64_data:"+base64_data);
+                console.log("distance:"+distance);
+                console.log("document_val:"+document_val);
+                console.log("goal_id:"+goal_id);
+                //$(".weui-toast_content").text("打卡中...");
+                //ajax end
+
+            });
+            //点击上传 结束
+            //打卡
+            function upload(distance,document_val,goal_id) {
+                $.ajax({
+                    type: "post",
+                    url: "/api/running_sign_in",
+                    data:{
+                        "base_64":base64_data,
+                        "distance": distance,
+                        "document":document_val,
+                        "goal":goal_id
+                    },
+                    success: function (res) {
+                        console.log(res);
+                        $.hideLoading();
+                        $.toast("上传成功", "success",function () {
+                            $("#mask_on_1").hide();
+                            setTimeout(function(){
+                                window.location.reload();
+                            },500);
+                            //window.location.reload();
+                        });
+
+                    },
+                    error:function(res){
+                        $.hideLoading();
+                        console.log(res)
+                    }
+                });
+            }
+
+
+            //重新上传
+            function reopenedUpload(distance,document_val,goal_id,punch_id) {
+
+                $.ajax({
+                    type: "post",
+                    url: "/api/upload_again",
+                    data:{
+                        "base_64":base64_data,
+                        "distance": distance,
+                        "document":document_val,
+                        "goal":goal_id,
+                        "punch_id":punch_id
+
+                    },
+                    success: function (res) {
+                        console.log(res);
+                        $.hideLoading();
+                        $.toast("上传成功", "success",function () {
+                            $("#mask_on_1").hide();
+                            setTimeout(function(){
+                                window.location.reload();
+                            },500);
+                            //window.location.reload();
+                        });
+
+                    },
+                    error:function(res){
+                        $.hideLoading();
+                        console.log(res)
+                    }
+                });
+            }
+
+
+
+
+            function time_1() {
+                var e = new Date ();
+                var H=e.getHours();
+                var m=e.getMinutes();
+                console.log(H);
+                console.log(m);
+                if(H== 23 && m > 45){
+                    return false
+                }else if(H == 0 && m <15){
+                    return false
+                }else{
+                    return true
+                }
+            }
+
+        });
     </script>
 
 </body>

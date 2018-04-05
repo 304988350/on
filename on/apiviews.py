@@ -6,7 +6,7 @@ from django.conf import settings
 from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
 from django.utils import timezone
 from wechatpy.utils import random_string
-
+from django.views.decorators.csrf import csrf_exempt
 from on.models import RunningGoal, RunningPunchRecord, SleepingGoal, SleepingPunchRecord, ReadingGoal, \
     ReadingPunchRecord
 from on.temp.push_template import do_push
@@ -14,6 +14,8 @@ from on.temp.template_map import template
 from on.user import UserTicket, UserRecord, UserInfo
 from on.wechatconfig import mediaApiClient
 import os
+
+import base64
 
 
 def punch_success(openid, url, first, punch_time, punch_day, days):
@@ -78,7 +80,10 @@ def report_tem(openid, url, content, nickname):
 
 
 # 跑步签到时上传图片
+@csrf_exempt
 def running_sign_in_api(request):
+    print("用户开始打卡")
+    print(111111111111111111111111111111)
     user = request.session["user"]
     """
     跑步签到后端 API
@@ -86,26 +91,31 @@ def running_sign_in_api(request):
     :return:
     """
     """获取对应的目标的goal id"""
-    goal_id = request.GET.get('goal', ' ')
-    distance = float(request.GET.get('distance', 0))
+    goal_id = request.POST.get('goal', ' ')
+    distance = float(request.POST.get('distance', 0))
     goal = RunningGoal.objects.get(goal_id=goal_id)
-
+    # 从前端接收传递过来的base64
+    base_64 = request.POST.get("base_64","")
+    # 将base64的前面去掉
     """获取当前的时间"""
-    punch_time= timezone.now()
+    punch_record_time = timezone.now()
     """存储一段话"""
-    document = request.GET.get("document", " ")
+    document = request.POST.get("document", " ")
     # """获取User的WechatID"""
     user_wechat_id = request.session['user'].wechat_id
     """存储图片"""
-    mediaid = request.GET.get('serverId', ' ')
-    apiLink = mediaApiClient.get_url(mediaid)
-    response = requests.get(apiLink)
     # User 名字加随机字符串
-    fileName = user_wechat_id + "_" + "{}".format(user.user_id)+ "_" + random_string(16) + ".jpg"
+    fileName = user_wechat_id + "_" + "{}".format(user.user_id) + "_" + random_string(16) + ".jpg"
+    print(fileName)
+    """保存图片"""
+    bash_str = "".join(base_64).split(",")[1]
+    imgdata = base64.b64decode(bash_str)
     # 文件的实际存储路径
     """将打卡记录存储到数据库中,增加一段话"""
-    punch = RunningPunchRecord.objects.create_record(goal, response.content, filename=fileName, distance=distance,punch_time = punch_time,
+    punch = RunningPunchRecord.objects.create_record(goal, filename=fileName, distance=distance,
+                                                     punch_record_time=punch_record_time, base64_str=imgdata,
                                                      document=document)
+    print("打卡成功")
     goal.add_distance += distance
     goal.save()
     """增加用户的完成天数"""
@@ -118,7 +128,8 @@ def running_sign_in_api(request):
             first = "在{}天内，一共完成{}公里".format(goal.goal_day, goal.goal_distance)
         # 发送打卡成功模板提醒
         punch_time = time.strftime('%m月%d日', time.localtime(time.time()))
-        end_time = (timezone.now() + timedelta(days=goal.goal_day)).strftime('%m月%d日')
+        end_time = (RunningGoal.objects.get(user_id=user.user_id).start_time + timedelta(days=goal.goal_day)).strftime(
+            '%m月%d日')
         url = 'http://wechat.onmytarget.cn/'
         # first = "在{}天内，每日完成{}公里".format(goal.goal_day, goal.kilos_day)
         days = '{}/{}'.format(times.finish_days, goal.goal_day)
@@ -130,41 +141,47 @@ def running_sign_in_api(request):
 
 
 # 重新上传打卡图片
+@csrf_exempt
 def upload_again(request):
+    print("开始重新上传")
     user = request.session["user"]
-    if request.method == "GET":
-        punch_id = request.GET.get("punch_id")
-        mediaid = request.GET.get('serverId', ' ')
-        document = request.GET.get("document", " ")
-        distance = request.GET.get("distance", " ")
-        apiLink = mediaApiClient.get_url(mediaid)
-        response = requests.get(apiLink)
-        user_wechat_id = user.wechat_id
+    if request.method == "POST":
+        punch_id = request.POST.get("punch_id")
+        base_64 = request.POST.get("base_64")
+        goal_id = request.POST.get('goal', ' ')
+        # mediaid = request.POST.get('serverId', ' ')
+        document = request.POST.get("document", " ")
+        distance = request.POST.get("distance", " ")
+        # apiLink = mediaApiClient.get_url(mediaid)
+        # response = requests.get(apiLink)
+        # user_wechat_id = user.wechat_id
         # User 名字加随机字符串
-        fileName = user_wechat_id + "_" + "{}".format(user.user_id) + "_" + random_string(16) + ".jpg"
+        fileName = user.wechat_id + "_" + "{}".format(user.user_id) + "_" + random_string(16) + ".jpg"
         # 文件存储的实际路径
-        filePath = os.path.join(settings.MEDIA_DIR, fileName)
+        filePath = os.path.join(settings.MEDIA_DIR, timezone.now().strftime("%Y-%m-%d") + "/")
         # 引用所使用的路径
-        refPath = os.path.join(settings.MEDIA_ROOT, fileName)
+        refPath = os.path.join(settings.MEDIA_ROOT, timezone.now().strftime("%Y-%m-%d") + "/")
+        bash_str = "".join(base_64).split(",")[1]
+        imgdata = base64.b64decode(bash_str)
+        file_filepath = filePath + fileName
+        print('原本的文件路径', file_filepath)
+        file_refpath = refPath + fileName
+        print("引用文件的路径", file_refpath)
         # 写入文件内容
-        with open(filePath, 'wb') as f:
-            f.write(response.content)
+        with open(filePath + fileName, 'wb') as f:
+            f.write(imgdata)
         record = RunningPunchRecord.objects.get(punch_id=punch_id)
         record.reload += 1
-        record.voucher_ref = refPath
+        record.voucher_ref = file_refpath
         record.document = document
-        record.voucher_store = filePath
+        record.voucher_store = file_filepath
         record.record_time = timezone.now()
-
         record.save()
-
+        print("重新上传成功")
         goal = RunningGoal.objects.get(user_id=user.user_id)
-
         # 自由模式剩余距离
         left_distance = goal.left_distance
-
         if goal.goal_type == 0:
-
             # 重写之前还剩下的距离
             killo = record.distance + left_distance
             # 重写累计距离
@@ -175,9 +192,7 @@ def upload_again(request):
             record.save()
         else:
             print("success")
-
         # record.save()
-
         return JsonResponse({'status': 201})
     else:
         return HttpResponseNotFound

@@ -77,6 +77,11 @@
         .weui-prompt-input{
             height: 3em;
         }
+        .p_overflow{
+            text-overflow:ellipsis;
+            overflow:hidden;
+            white-space:nowrap;
+        }
     </style>
 </head>
 
@@ -109,7 +114,12 @@
 						 style="border:1px solid #efebe9;width:80%;margin: auto;display: block;margin-left: 10%">
 
                         {% if fools == 1 and status == 0 %}
-                            <img src="/static/images/aprilFool/aprilFool_0_0@2x.png" id="_fools_" style="position: absolute;width: 100%;bottom: -50px;opacity:0;height: 45px">
+
+                            {%if user.user_id == 100849 %}
+                                <img src="/static/images/aprilFool/aprilFool_0_3@2x.png" id="1_fools_1" style="position: absolute;right: 0;opacity:1;height: 45px;bottom: 0;">
+                            {% else %}
+                                <img src="/static/images/aprilFool/aprilFool_0_0@2x.png" id="_fools_" style="position: absolute;width: 100%;bottom: -50px;opacity:0;height: 45px">
+                            {% endif %}
                         {% elif fools == 1 and status == 1 %}
                             <img src="/static/images/aprilFool/1155@2x.png" id="_fools_1" style="position: absolute;width: 100%;opacity:0;height: 120%;">
                         {% endif %}
@@ -117,8 +127,15 @@
                     </div>
 
 
-					<div class="user-header__text">
-						<div style="font-size:1.2em;font-weight: 600;" id="setting-nickname">{{ user.nickname }}</div>
+					<div class="user-header__text" style="max-width: 50%;overflow: hidden;">
+                        <div style="overflow: hidden;">
+                            <div style="font-size:1.1em;font-weight: 600;display:block;max-width: 70%;overflow: hidden;float: left;" >
+                                <span id="setting-nickname" class="p_overflow">{{ user.nickname }}</span>
+                            </div>
+                            <div style="font-size:1.1em;font-weight: 600;display: block;width:26px;float: left;margin-left: 10px;" >
+                                <span class="setting-nickname_1" style="font-size:12px;margin-left:1px;color:  #03BC49; ">修改</span>
+                            </div>
+                        </div>
 						<div style="margin-top: 8px;color: #B6C1C8;">账号: {{ user.user_id }}</div>
 					</div>
                     <div style="position: absolute;right:25px;top: 40px;width: 30px;">
@@ -169,7 +186,8 @@
 						</h4>
 
                         <span class="wallet-card__entry">额外收益 :
-							<span class="wallet-card__num">{{ user.extra_money|default:'0.00' }}</span>
+{#                            <span class="wallet-card__num">{{ extra_earn }}</span>#}
+                            <span class="wallet-card__num">{{ user.extra_money|default:'0.00' }}</span>
 						</span>
 						<span class="wallet-card__entry" style="display: none;">积分 :
 							<span class="wallet-card__num">{{ user.points }} </span>
@@ -312,7 +330,6 @@
 			}
 			$('input[type="text"]').each(resizeInput);
 
-
 		});
 		$("#usersex").change(function () {
 			var val = $(this).val().trim();
@@ -358,7 +375,7 @@
 			}
 		});
 		
-		$("#setting-nickname").click(function () {
+		$("#setting-nickname,.setting-nickname_1").click(function () {
             console.log("修改姓名");
             $.confirm("确定要修改姓名吗？", function() {
             //点击确认后的回调函数
@@ -371,12 +388,20 @@
 		    var _name_ =$("#setting-nickname").text();
             $.prompt({
                 title: '',
-                text: '修改姓名！',
+                text: '修改昵称！',
                 input: _name_,
                 empty: false, // 是否允许为空
                 onOK: function (input) {
                     console.log(input);
                     //点击确认
+
+                    if (input.length > 10) {
+                        $.toptip('输入的昵称不能超过10个字符！', 'warning');
+                        $.toast("修改失败", "cancel",function () {
+
+                        });
+                        return
+                    }
 
                     $.ajax({
                         type: "GET",
@@ -558,6 +583,8 @@
     var colHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     var colWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     var img_w=(colWidth-20)*0.3*0.8;
+
+    $(".user-header__text").width(colWidth-colWidth*0.3-100);
 
     $(".img_circle_box").height(img_w);
 

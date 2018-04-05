@@ -76,7 +76,7 @@
     </script>
 
 	<script>
-		$("#transfer-btn").click(function () {
+		$("#transfer-btn").one("click",function(){
 
 		    $.post('/transfer',{
 		        'price':{{ balance }}
@@ -84,18 +84,31 @@
 		        //alert(response.status);
 
 		        if(response['status'] == 200){
-		            $.toast('提现成功！');
-		            window.location.href = "/user/index";
+		            $.toast('提现成功！',function () {
+                        window.location.href = "/user/index";
+                    });
 				}
 				else if(response['status'] == 201){
-		            $.toast('余额需大于1元', 'cancel');
+		            $.toast('余额需大于1元', 'cancel',function () {
+                        window.location.href = "/user/index";
+                    });
+		            //window.location.href = "/user/index";
 				}
 				else if(response['status'] == 401){
-				    $.toast('提现失败,<br/>请联系客服', 'cancel');
+				    $.toast('提现失败,<br/>请联系客服', 'cancel',function () {
+                        window.location.href = "/user/index";
+                    });
+				    //$.toast('提现成功！');
+				}else if(response['status'] == 403){
+				    $.toast('提现金额与余额不匹配!', 'cancel',function () {
+                        window.location.href = "/user/index";
+                    });
 				    //$.toast('提现成功！');
 				}
 				else{
-				    $.toast('提现金额大于余额!', 'cancel');
+				    $.toast('提现金额大于余额!', 'cancel',function () {
+                        window.location.href = "/user/index";
+                    });
                 }
             });
         });

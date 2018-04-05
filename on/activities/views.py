@@ -3,12 +3,12 @@
 from django.http import JsonResponse, HttpResponseNotFound
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-
+import decimal
 from on.activities.reading.views import show_reading_goal
 from on.activities.running.views import show_running_goal
 from on.activities.sleeping.views import show_sleeping_goal
-from on.models import Activity, Goal, RunningGoal, SleepingGoal, ReadingGoal,RunningPunchRecord
-from on.user import UserInfo, UserRecord,FoolsDay,UserInvite
+from on.models import Activity, Goal, RunningGoal, SleepingGoal, ReadingGoal, RunningPunchRecord
+from on.user import UserInfo, UserRecord, FoolsDay, UserInvite
 from on.views import oauth
 from on.temp.push_template import do_push
 from on.wechatconfig import get_wechat_config
@@ -33,6 +33,7 @@ goal_mapping = {
     否则将数据库中的打卡时间设置为前一天晚上10点，
 """
 
+
 # logger = logging.getLogger("app")
 
 
@@ -53,7 +54,7 @@ def show_goals(request):
         fools = 1
     else:
         fools = 0
-    # 判断用户是否参与了愚人节活动
+        # 判断用户是否参与了愚人节活动
         # 判断用户是否参与了愚人节活动
     if FoolsDay.objects.join_in_fools(user_id=user.user_id):
         join = 1
@@ -67,7 +68,8 @@ def show_goals(request):
     #     first_day_record = 1
     # else:
     #     first_day_record = 0
-    return render(request, 'goal/index.html', {'goals': payed_goals, "status": status,"fools":fools,"join":join,"join_num":len(join_num)})
+    return render(request, 'goal/index.html',
+                  {'goals': payed_goals, "status": status, "fools": fools, "join": join, "join_num": len(join_num)})
 
 
 # 获取某个模型的所有子模型
@@ -89,6 +91,7 @@ def show_specific_goal(request, pk):
 @oauth
 def show_activity(request):
     pass
+
 
 # 展示分享页
 @oauth
@@ -200,8 +203,7 @@ def delete_goal(request):
                     # 用户触发，如果挑战成功则删除目标，退还押金
                     # 判断用户是否挑战成功
                     # if goal.refund_to_user(user.wechat_id):
-                    # 删除用户的目标
-                    goal_class.objects.delete_goal(goal_id)
+
                     # 更新用户的押金
                     UserInfo.objects.update_deposit(user_id=user.user_id,
                                                     pay_delta=-(goal.guaranty + goal.down_payment))
@@ -212,15 +214,24 @@ def delete_goal(request):
 
                     # 获取邀请了多少好友
                     num = UserInvite.objects.filter(user_id=request.session["user"].user_id).count()
-                    #用户获取收益的百分比
-                    add_up = num*0.5+1
-                    if add_up >=10:
+                    # 用户获取收益的百分比
+                    add_up = num * 0.5 + 1
+                    if add_up >= 10:
                         add_up = 10
+                    #查询用户的额外收益
+                    extra = UserInfo.objects.get(user_id=user.user_id)
+
+                    # 查询用户当前的额外收益
+                    Run = RunningGoal.objects.get(user_id=user.user_id)
+                    extra_earn = Run.extra_earn
+                    print(extra_earn)
+                    price = decimal.Decimal(Run.guaranty) + decimal.Decimal(Run.down_payment) + decimal.Decimal(Run.bonus * decimal.Decimal(add_up)) + decimal.Decimal(extra.extra_money)
                     # 将用户获取的收益存入余额
-                    # 查询用户当前活动的收益
-                    UserInfo.objects.save_balance(user_id=user.user_id,
-                                                  price=goal.guaranty + goal.down_payment + goal.bonus*add_up)
+                    #查询现在用户的保证金跟底金
+                    UserInfo.objects.save_balance(user_id=user.user_id,price=price)
                     # openid = str(UserInfo.objects.get(user_id=user.user_id).wechat_id)
+                    # 删除用户的目标
+                    goal_class.objects.delete_goal(goal_id)
                     openid = user.wechat_id
                     url = 'http://wechat.onmytarget.cn/user/index'
                     activate = "跑步"
@@ -281,7 +292,8 @@ def create_goal(request):
         guaranty = float(request.POST["guaranty"])
         down_payment = float(request.POST["down_payment"])
         extra_earn = 0
-        average = int(down_payment) / int(down_num)
+        average = float(down_payment) / int(down_num)
+        print("每次要扣除的金额{}".format(average))
         print(average, "int(down_payment)/int(down_num)int(down_payment)/int(down_num)")
         activate_deposit = guaranty + down_payment
         print(activate_deposit)

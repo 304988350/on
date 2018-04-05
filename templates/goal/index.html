@@ -101,28 +101,8 @@
 			</div>
 		</div>
         <!--我的目标列表-->
-        {% if status %}
+
             <ul class="target-list">
-                <li class="target-list-item" id="aprilFool_1" data-link="" style="background-image: url(/static/images/index/aprilFool4@2x.png);display: none;">
-                        <div class="header-mask"></div>
-                        <div class="row-center between" style="box-sizing:border-box;width: 100%;margin-top: 5px;padding-right: 10px;">
-                            <div class="item-text">愚人节</div>
-                            <div class="item-status">
-                                <div class="status-text icon-active">进行中</div>
-                            </div>
-                        </div>
-
-                        <div style="margin-left: 10px;z-index: 10;">
-
-                        </div>
-                        <div style="margin-left: 10px;z-index: 10;">
-                            <span style="font-size: 14px;color: #B6C1C8;">参与人数：</span>
-                            <span style="font-size: 18px;font-weight:600;color: #ff931f;">{{ join_num }}</span>
-                            <span style="font-size: 14px;color: #B6C1C8;">人</span>
-                        </div>
-                    </li>
-
-
                 {% for goal in goals %}
                     <li class="target-list-item" data-link="{{ goal.goal_id}}?activity_type={{ goal.activity_type }}" {% if goal.activity_type == "0" %}style="background-image: url(/static/images/sleep_goal_bar.jpg);"{% elif goal.activity_type == "1" %}style="background-image: url(/static/images/run_goal_tubar.jpg);"{% else %}style="background-image: url(/static/images/read_goal_bar.jpeg);"{% endif %}>
                         <div class="header-mask"></div>
@@ -154,32 +134,7 @@
                     </li>
                 {% endfor %}
             </ul>
-        {% else %}
-            <ul class="target-list">
-                <li class="target-list-item" id="aprilFool_1" data-link="/foolsday/rank" style="background-image: url(/static/images/index/aprilFool4@2x.png);display: none;">
-                        <div class="header-mask"></div>
-                        <div class="row-center between" style="box-sizing:border-box;width: 100%;margin-top: 5px;padding-right: 10px;">
-                            <div class="item-text">愚人节</div>
-                            <div class="item-status">
-                                <div class="status-text icon-active">进行中</div>
-                            </div>
-                        </div>
 
-                        <div style="margin-left: 10px;z-index: 10;">
-
-                        </div>
-
-                        <div style="margin-left: 10px;z-index: 10;">
-                            <span style="font-size: 14px;color: #B6C1C8;">参与人数：</span>
-                            <span style="font-size: 18px;font-weight:600;color: #ff931f;">{{ join_num }}</span>
-                            <span style="font-size: 14px;color: #B6C1C8;">人</span>
-                        </div>
-                    </li>
-                </ul>
-            <div class="no_data">
-                <img src="/static/images/index/no_data_icon@3x.png">
-            </div>
-        {% endif %}
     </div>
 
     <!--导航栏, 使用微信风格-->
@@ -284,6 +239,7 @@
             });
 		</script>
 
+    <!--
         <script>
 
             console.log("---------------参与人数 {{ join_num }}-------------------");
@@ -320,6 +276,8 @@
                 {% endif %}
 
         </script>
+
+        -->
 
 </body>
 

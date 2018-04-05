@@ -223,13 +223,12 @@ class Goal(models.Model):
 
     # 判断是否是第一天
     def is_first_day(self):
-        day = timezone.now().day - self.start_time.day
-        print(day,"这个数值等于或小于1的时候表示的是第一天")
-        # 判断是否是第一天
-        if int(day) <= 1:
+        if  timezone.now().strftime("%Y-%m-%d") == self.start_time.strftime("%Y-%m-%d"):
             return True
         else:
             return False
+
+
 
     def auto_use_ticket(self, ticket_type):
         # 如果不存在打卡记录,则使用券。注意这里应该是为昨天使用券，而非今天！
@@ -250,32 +249,31 @@ class Goal(models.Model):
                     # 查看前一天到今天是否存在打卡记录
                     if self.exist_punch_last_day():
                         # 如果存在打卡记录,则不付出钱
-                        # if self.is_first_day():
-                        #     pass
                         pass
                     else:
-                        #判断前一天是否是第一天，若是第一天则把开始日期退后一天
-                        # if self.is_first_day():
-                        #     print("开始判断是否是第一天")
-                        #     pass
-                        # TODO
-                        # 如果有券,则用券,不扣钱; 如果没有券,则扣除一定金额
-                        has_ticket = self.auto_use_ticket(ticket_type="NS")
-                        if not has_ticket:
-                            pay_out = self.calc_pay_out()
-                            print(pay_out, "若是日常模式且没有免签券，则扣除此金额")
+                        #如果不存在打卡记录
+                        if self.is_first_day():
+                            print("开始判断是否是第一天")
+                            #有返回值的时候是第一天，直接pass
+                            pass
+                        else:
+                            # 如果有券,则用券,不扣钱; 如果没有券,则扣除一定金额
+                            has_ticket = self.auto_use_ticket(ticket_type="NS")
+                            if not has_ticket:
+                                pay_out = self.calc_pay_out()
+                                print(pay_out, "若是日常模式且没有免签券，则扣除此金额")
+                if self.down_payment <= 0 and self.guaranty <= 0:
+                    self.status = "FAILED"
+                    print("押金保证金都小于0，表示失败")
+                # 检查目标是否已经算失败了, 在日常模式下如果两者均为0, 则判定目标失败
+                if self.left_day <= 0:
+                    print("日常模式的剩余天数小于零，说明活动结束")
                     if self.down_payment <= 0 and self.guaranty <= 0:
                         self.status = "FAILED"
                         print("押金保证金都小于0，表示失败")
-                    # 检查目标是否已经算失败了, 在日常模式下如果两者均为0, 则判定目标失败
-                    if self.left_day <= 0:
-                        print("日常模式的剩余天数小于零，说明活动结束")
-                        if self.down_payment <= 0 and self.guaranty <= 0:
-                            self.status = "FAILED"
-                            print("押金保证金都小于0，表示失败")
-                        else:
-                            self.status = "SUCCESS"
-                            print("押金保证金都大于0，表示成功")
+                    else:
+                        self.status = "SUCCESS"
+                        print("押金保证金都大于0，表示成功")
 
                 # 如果今天已经是最后一天，则将目标的状态设置为完成或失败
                 else:
@@ -285,7 +283,7 @@ class Goal(models.Model):
                         print("现在的left_day：{}自由模式下，当剩余天数小于零的时候开始结算".format(self.left_day))
                         # 将自由模式下的钱数结算
                         pay_out = self.calc_pay_out()
-                        print(pay_out, "自由模式下要扣除的金额数")
+                        print(pay_out, "用户{}自由模式下要扣除的金额数{}".format(self.user_id,pay_out))
                         # 如果付出的钱没有总金额多,算完成,否则算失败
                         if self.guaranty + self.down_payment > 0:
                             self.status = "SUCCESS"

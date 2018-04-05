@@ -12,6 +12,8 @@
 </head>
 <link rel="stylesheet" href="/static/css/buttons.min.css">
 <link rel="stylesheet" href="/static/css/public.css">
+<link rel="stylesheet" href="/static/css/jquery-weui.min.css">
+<link rel="stylesheet" href="/static/css/weui.min.css">
 <style>
     html, body{
         width: 100%;
@@ -56,23 +58,45 @@
         </p>
         <p style="margin-top:5px; color: #000;font-size: 1rem;font-weight: 600;">{{ goal_intro }}</p>
     </div>
-    <div class="target-bottom__layer">
+    <div class="target-bottom__layer" style="overflow: hidden">
         <p style="margin-bottom: 10px;color: #B6C1C8;font-size: 0.8rem;font-weight: 600;">识别二维码进入活动群参与更多活动</p>
         {% if activity == "0" %}
         <img src="/static/images/on_share/on_share_sleep.jpg">
         {% elif activity == "1" %}
-        <img src="/static/images/on_share/on_share_run.jpg">
+        <div class="qqGroupCode_box" style="opacity:1;display: block;height:initial;width: 90%;margin: 0 auto;overflow: hidden">
+            <div class="swiper-container_on_share_run" style="display: block;">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" data-link="#">
+                        <img src="/static/images/on_share/on_share_run_1.jpg" style="margin: 0 auto 25px;display: block;width: 60%" >
+                    </div>
+                    <div class="swiper-slide" data-link="#">
+                        <img src="/static/images/on_share/on_share_run_2.jpg" style="margin: 0 auto 25px;display: block;;width: 60%" >
+                    </div>
+                </div>
+            </div>
+        </div>
         {% else %}
         <img src="/static/images/on_share/on_share_reading.jpg">
         {% endif %}
 {#        <p style="margin-top:0;margin-bottom: 20px;color: #B6C1C8;font-size: 1rem;font-weight: 600;">快点击右上角分享给好友们吧！</p>#}
-        <a href="#" id="close-btn" class="button button-primary button-pill">完成</a>
+
+    </div>
+    <div style="width: 60%;display: block;margin: auto;">
+        <a href="#" id="close-btn" class="button button-primary button-pill" style="display: block;margin: auto;width: 80%">完成</a>
     </div>
 </body>
     <script type="text/javascript" src="/static/js/jquery-2.1.4.js"></script>
     <script type="text/javascript" src="/static/js/jquery-weui-2.1.4.js"></script>
     <script type="text/javascript" src="/static/js/public.js"></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type='text/javascript' src='/static/js/swiper.min.js' charset='utf-8'></script>
+    <script>
+        var swiper_on_share = new Swiper('.swiper-container_on_share_run', {
+            //autoplay: true,
+            loop:true,
+        });
+    </script>
+
     <script>
         $("iframe").detach();
         {{ WechatJSConfig|safe}}
